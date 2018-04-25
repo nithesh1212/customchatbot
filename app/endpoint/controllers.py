@@ -20,11 +20,7 @@ from app.stories.models import Story
 botEmail = "marvel@sparkbot.io"  # bot's email address
 accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
 host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
-#server = "localhost"  # Web hook won't work until the server sets up
-#port = 8001
 headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
-#room_id = "Y2lzY29zcGFyazovL3VzL1JPT00vMmExY2I2YjEtNDQ1NC0zODQ0LWJiMDktODY0Zjk5OTUyZTYx"  ## Room id where bot is added@app.route('/webhook', methods=['POST'])
-
 
 class SilentUndefined(Undefined):
     def _fail_with_undefined_error(self, *args, **kwargs):
