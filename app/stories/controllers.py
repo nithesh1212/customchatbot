@@ -88,7 +88,7 @@ def fileupload():
             csvfile = open(UPLOAD_FOLDER+'/'+filename, 'r',encoding='utf-8', errors='ignore')
             reader = csv.DictReader(csvfile)
             print(reader)
-            header = ["storyName", "intentName", "apiTrigger", "speechResponse", "labelledSentences", "parameters"]
+            header = ["storyName", "intentName", "apiTrigger", "speechResponse", "labeledSentences", "parameters"]
 
             parameter1 = []
 
@@ -99,18 +99,13 @@ def fileupload():
                 for field in header:
                     print("Field",field)
                     list2 = []
-                    if field == "labelledSentences":
+                    if field == "labeledSentences":
                         list1 = []
                         list1.append(each[field])
                         sentences = list1[0]
                         cleanSentences = html2text.html2text(sentences)
                         result = posTagAndLabel(cleanSentences)
                         print("Result", result)
-
-                        # data = "sentences=" + list1[0]
-                        # headers = {'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-                        # response = requests.post("http://localhost:8001/core/posTagAndLabel", data=data, headers=headers)
-                        # print(response.json())
                         ls.data = result
                     row[field] = each[field]
                     print("row field",row[field])
