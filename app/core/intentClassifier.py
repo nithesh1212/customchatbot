@@ -45,7 +45,7 @@ class IntentClassifier(object):
             print(self.PATH)
         sentenceClassifer.train(trainFeatures,
                                 trainLabels,
-                                outpath='C:\\Users\\syerupal\\Desktop\\ai-chatbot-framework-master\\model_files\\intent.model', verbose=False)
+                                outpath='.\\model_files\\intent.model', verbose=False)
         return True
 
     def predict(self, sentence):

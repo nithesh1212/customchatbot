@@ -44,7 +44,7 @@ def sentenceTokenize(sentences):
         tokenizedSentencesPlainText += " " + t
     return tokenizedSentencesPlainText
 
-UPLOAD_FOLDER = 'C:\\Users\\syerupal\\Desktop\\ai-chatbot-framework-master\\UploadFiles'
+UPLOAD_FOLDER = '.\\UploadFiles'
 ALLOWED_EXTENSIONS = set(['csv'])
 connect("iky-ai", host="localhost", port=27017)
 
@@ -182,41 +182,6 @@ def fileupload():
 
             #return redirect(url_for('stories_blueprint.fileupload', filename=filename))
     return ''
-
-@stories.route('/build',methods=['GET'])
-def build():
-    csvfile = open('C:\\Users\\syerupal\\Desktop\\ai-chatbot-framework-master\\csvupload.csv', 'r')
-    reader = csv.DictReader(csvfile)
-    header = ["storyName", "intentName", "apiTrigger", "speechResponse", "labelledSentences", "parameters"]
-
-
-    parameter1 = []
-
-    ls = LabeledSentences()
-
-    for each in reader:
-        row = {}
-        for field in header:
-            list2 = []
-            if field == "labelledSentences":
-                list1 = []
-                list1.append(each[field])
-                sentence = list1[0]
-                data = "sentences=" + list1[0]
-                headers = {'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'}
-                response = requests.post("http://localhost:8001/core/posTagAndLabel", data=data, headers=headers)
-                print(response.json())
-                ls.data = response.json()
-                break;
-            row[field] = each[field]
-            print(row[field])
-
-        list2.append(ls)
-        csvStories = Story(storyName=row['storyName'], intentName=row['intentName'], apiTrigger=False,
-                           speechResponse=row['speechResponse'], parameters=parameter1, labeledSentences=list2)
-        csvStories.save();
-    print("Done")
-
 
 @stories.route('/', methods=['POST'])
 def createStory():

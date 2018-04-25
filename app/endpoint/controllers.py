@@ -85,8 +85,10 @@ def api():
 
         if app.config["DEFAULT_WELCOME_INTENT_NAME"] in requestJson.get(
                 "input"):
+            print("--------------insideif------------------")
             story = Story.objects(
                 intentName=app.config["DEFAULT_WELCOME_INTENT_NAME"]).first()
+            print("Story" , story)
             resultJson["complete"] = True
 #            resultJson["intent"]["name"] = story.storyName
             resultJson["intent"]["storyId"] = str(story.id)
