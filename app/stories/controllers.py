@@ -24,7 +24,7 @@ from app.core.nlp import posTagAndLabel,posTagger,sentenceTokenize
 # Load and initialize Perceptron tagger
 tagger = PerceptronTagger()
 
-UPLOAD_FOLDER = '.\\UploadFiles'
+UPLOAD_FOLDER = './UploadFiles'
 ALLOWED_EXTENSIONS = set(['csv'])
 connect("iky-ai", host="localhost", port=27017)
 
@@ -85,7 +85,7 @@ def fileupload():
             print(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #return redirect(url_for('stories_blueprint.fileupload', filename=filename))
-            csvfile = open(UPLOAD_FOLDER+'\\'+filename, 'r')
+            csvfile = open(UPLOAD_FOLDER+'/'+filename, 'r')
             reader = csv.DictReader(csvfile)
             print(reader)
             header = ["storyName", "intentName", "apiTrigger", "speechResponse", "labelledSentences", "parameters"]
