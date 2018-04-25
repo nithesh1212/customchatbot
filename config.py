@@ -23,9 +23,9 @@ class Development(Config):
 
 class Production(Config):
     # MongoDB Database Details
-    DB_HOST = "ds259119.mlab.com:59119"
+    DB_NAME = "heroku_dcc30xfp"
+    DB_HOST = "mongodb://heroku_dcc30xfp:nekb61rpo3vkv3aujbj1dfsl59@ds259119.mlab.com:59119/heroku_dcc30xfp"
     DB_USERNAME = "heroku_dcc30xfp"
     DB_PASSWORD = "nekb61rpo3vkv3aujbj1dfsl59"
-
     # Web Server details
     WEB_SERVER_PORT = 8001
