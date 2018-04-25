@@ -85,7 +85,7 @@ def fileupload():
             print(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             #return redirect(url_for('stories_blueprint.fileupload', filename=filename))
-            csvfile = open(UPLOAD_FOLDER+'/'+filename, 'r')
+            csvfile = open(UPLOAD_FOLDER+'/'+filename, 'r',encoding='utf-8', errors='ignore')
             reader = csv.DictReader(csvfile)
             print(reader)
             header = ["storyName", "intentName", "apiTrigger", "speechResponse", "labelledSentences", "parameters"]
