@@ -3,8 +3,8 @@ import os
 
 class Config(object):
     DEBUG = False
-    DB_NAME = "iky-ai"
-    DB_HOST = "localhost:27017"
+    DB_NAME = "heroku_dcc30xfp"
+    DB_HOST = "mongodb://heroku_dcc30xfp:nekb61rpo3vkv3aujbj1dfsl59@ds259119.mlab.com:59119"
     DB_USERNAME = ""
     DB_PASSWORD = ""
     # Web Server details
@@ -23,7 +23,7 @@ class Development(Config):
 
 class Production(Config):
     # MongoDB Database Details
-    DB_HOST = "mongodb://localhost:27017/"
+    DB_HOST = "mongodb://heroku_dcc30xfp:nekb61rpo3vkv3aujbj1dfsl59@ds259119.mlab.com:59119"
     DB_USERNAME = ""
     DB_PASSWORD = ""
 
