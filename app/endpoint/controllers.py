@@ -2,6 +2,7 @@ import os
 from bson import ObjectId
 import json
 import requests
+from pandas.io.json import json_normalize
 
 from datetime import datetime
 
@@ -19,14 +20,18 @@ from app.stories.models import Story
 from requests import session
 
 #Prod Bot
-#botEmail = "marvel@sparkbot.io"  # bot's email address
-#accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
+botEmail = "marvel@sparkbot.io"  # bot's email address
+accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
 
-#local bot
+
+host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
+headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
+
+'''local bot
 botEmail = "apitesting@sparkbot.io"  # bot's email address
 accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
 host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
-headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
+headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}'''
 
 class SilentUndefined(Undefined):
     def _fail_with_undefined_error(self, *args, **kwargs):
@@ -74,7 +79,7 @@ def callApi(url, type, parameters, isJson=False):
         response = requests.delete(url)
     else:
         raise Exception("unsupported request method.")
-    result = json.loads(response.text)
+    result = response.text
     print(result)
     return result
 
@@ -261,114 +266,9 @@ def tts():
 
 
 
-''''@endpoint.route('/sparkest',methods=['POST'])
-def spark_test():
-    try:
-        print("Inside api")
-        session = requests.session();
-        session.__setattr__('parameters',False)
-        if(session.__getattribute__('parameters')==False):
-            print("in api/spark")
-            print("Request Json", request.json)
-            messageId = request.json.get('data').get('id')
-            room_id = request.json.get('data').get('roomId')
-            toPersonEmail = request.json.get('data').get('personEmail')
-            print("Person Email.............", toPersonEmail)
-            print(room_id)
-            print("Message Id", messageId);
-            if toPersonEmail != botEmail:
-                        messageDetails = requests.get(host + "messages/" + messageId, headers=headers)
-                        print("messageDetails", messageDetails)
-                        responseMessage = messageDetails.json().get('text')
-                        intentClassifier = IntentClassifier()
-                        try:
-                         storyId = intentClassifier.predict(responseMessage)
-                         story = Story.objects.get(id=ObjectId(storyId))
-
-                         if(story.parameters):
-                             session.__setattr__('parameters', True)
-
-                             for parameter in story.parameters:
-                                 payload = {"roomId": room_id, "text": str(parameter.prompt),
-                                            "personEmail": toPersonEmail}
-                                 response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
-                                                             data=json.dumps(payload),
-                                                             headers=headers)
-                                 print(response)
 
 
-
-                                 requests.request()
-
-                                 return response.status_code
-
-                                 print("Parameter Id",parameter.id)
-                                 print("Parameter Name",parameter.name)
-                                 print("Parameter required",parameter.required)
-                                 print("Parameter type",parameter.type)
-                                 print("Parameter prompt",parameter.prompt)
-
-                         else:
-                             print("In else")
-
-
-
-
-
-
-
-
-
-
-
-                         if(story.apiTrigger==True):
-                            print("URL",story.apiDetails.url)
-                            print("Request Type",story.apiDetails.requestType)
-                            print("JSON?",story.apiDetails.isJson)
-                            print("JSON Data",story.apiDetails.jsonData)
-                            response=requests.request(story.apiDetails.requestType,story.apiDetails.url)
-                            print("response......",response.json())
-                            payload = {"roomId": room_id, "text": str(response.json()),
-                                       "personEmail": toPersonEmail}
-                            response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
-                                                        data=json.dumps(payload),
-                                                        headers=headers)
-                            print(response.status_code)
-                            return response.status_code
-                         else:
-                             print("Speech Response", story.speechResponse)
-                             print("response message", responseMessage)
-                             # toPersonEmail = messageDetails.json().get('personEmail')
-                             print("person email", toPersonEmail);
-
-                             payload = {"roomId": room_id, "text": story.speechResponse, "personEmail": toPersonEmail}
-                             response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
-                                                         data=json.dumps(payload),
-                                                         headers=headers)
-                             print("In send message response", response.status_code)
-
-                             return response.status_code
-
-
-
-
-                        except:
-                            payload = {"roomId": room_id, "text": "Sorry! i cant find your question", "personEmail": toPersonEmail}
-                            response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
-                                                        data=json.dumps(payload),
-                                                        headers=headers)
-                            print(response.status_code)
-                            return response.status_code
-
-            else:
-                return ""
-
-    except :
-            print("In Except ")
-            return ""
-'''
-
-@endpoint.route('/sparktest',methods=['POST'])
+@endpoint.route('/spark',methods=['POST'])
 
 def sparkapi():
     #session=requests.session()
@@ -385,6 +285,7 @@ def sparkapi():
         if(session.__getattribute__('parameterStatus') and len(session.__getattribute__('parameters'))>=0):
 
 
+
             print("In first if Parameter Status", session.__getattribute__('parameterStatus'))
             print("In first if Parameters ", session.__getattribute__('parameters'));
             print("Length of parameters ",len(session.__getattribute__('parameters')))
@@ -394,9 +295,9 @@ def sparkapi():
             print("Param List",paramList)
             print("Param List type ", type(paramList))
 
-
-            parameter=paramList[index]
-            print(paramList[index].name)
+            if(paramLength!=0):
+                parameter=paramList[index]
+                print(paramList[index].name)
 
             messageDetails = requests.get(host + "messages/" + messageId, headers=headers)
             print("Message Details JSON ", messageDetails)
@@ -429,16 +330,82 @@ def sparkapi():
                     print("Request type",apiDetails.requestType)
                     print("Is JSON ",apiDetails.isJson)
                     print("JSON Data ",apiDetails.jsonData)
+
                     result = callApi(story.apiDetails.url,
                                      story.apiDetails.requestType,
                                      story.apiDetails.jsonData,story.apiDetails.isJson)
-                    #r=requests.request(apiDetails.requestType,apiDetails.url,params=session.__getattribute__('parameters'))
-                    #print(r.url)
-                    #print(r.request)
-                    #print(r.text)
-                  #  print("123344555", result.flight[0].id)
+
+                    print("Before json..........")
+
+
+
+
+                    resDict=json.loads(result);
+
+                    if isinstance(resDict, dict) and 'listName' in resDict:
+                        resDict = resDict['listName']
+
+                    print("Sdfghjhgfc ",resDict)
+
+                    print("Type of redDict ",type(resDict))
+                    print("Keys ",resDict.keys());
+                    print("Type of keys",type(resDict.keys))
+                    print("Values ",resDict.values())
+                    print("Type of values",type(resDict.values))
+
+
+                    for key in resDict.keys():
+                        print("Key",key)
+
+                    for value in resDict.values():
+                        print("Value",value)
+
+                    print(type(json.dumps(json.loads(result),indent=4,sort_keys=True)))
+
+                    print("Speech Response",story.speechResponse);
+
+                    resStrong=story.speechResponse
+                    lis1=resStrong.splitlines();
+                    print(lis1)
+
+                    jsondata='''{
+	                                "id": "Y2lzY29zcGFyazovL3VzL1dFQkhPT0svNGJkYWY5NGEtNTE0Yy00Y2Y2LWJhYmYtZTcyYzQyMTc3YzVh",
+                                    "name": "api testing bot",
+                                    "targetUrl": "https://0efbd827.ngrok.io/api/sparktest",
+                                    "resource": "messages",
+                                    "event": "all",
+                                    "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY",
+                                    "createdBy": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zZDUyNWVkNy0yNGQ2LTQyNDQtYjc1Yy05MTg3ZjkxMWRmYTU",
+                                    "appId": "Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL0MzMmM4MDc3NDBjNmU3ZGYxMWRhZjE2ZjIyOGRmNjI4YmJjYTQ5YmE1MmZlY2JiMmM3ZDUxNWNiNGEwY2M5MWFh",
+                                    "ownedBy": "creator",
+                                    "status": "active",
+                                    "created": "2018-05-08T05:43:10.832Z"
+                                }'''
+                    data = json.loads(jsondata)
+                    tempString=""
+                    for id in lis1:
+                        tempString+="**"+id+"**"+ ": "
+                        tempString+=data[id]+""
+                        tempString+="<br>"
+                    print("Before")
+                    print(type(data))
+                    print(type(data.keys()))
+                    print(data.values())
+                    for key in data.keys():
+                        print("Key ",key)
+                        print("Value",data[key])
+                    print("After")
+                    #print (json_normalize(data['flight']))
+
+
+
+                    session.__setattr__('storyId','')
+                    session.__setattr__('parameterStatus',False)
+                    session.__setattr__('parameters','')
+                    print("testtttttttttttttt,..........",session.__getattribute__('storyId'))
+
                     if(result):
-                        payload = {"roomId": roomId, "text": "hello how are you", "personEmail": email}
+                        payload = {"roomId": roomId, "markdown": tempString , "personEmail": email}
                         response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
                                                     data=json.dumps(payload),
                                                     headers=headers)
@@ -480,7 +447,7 @@ def sparkapi():
                     response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
                                                 data=json.dumps(payload),
                                                 headers=headers)
-                    print(response)
+
                     return response.status_code
 
             payload = {"roomId": roomId, "text": story.speechResponse,
@@ -498,58 +465,6 @@ def sparkapi():
         return ""
     else:
         return""
-
-
-
-
-'''@endpoint.route('/spark',methods=['POST'])
-def get_tasks():
-    try:
-
-        print("in api/spark")
-        print("Request Json",request.json)
-        messageId = request.json.get('data').get('id')
-        room_id=request.json.get('data').get('roomId')
-        toPersonEmail=request.json.get('data').get('personEmail')
-        print("Person Email.............",toPersonEmail)
-        print(room_id)
-        print("Message Id",messageId);
-        if toPersonEmail != botEmail:
-                messageDetails = requests.get(host + "messages/" + messageId, headers=headers)
-                print("messageDetails", messageDetails)
-                responseMessage = messageDetails.json().get('text')
-                intentClassifier = IntentClassifier()
-                try:
-                 storyId = intentClassifier.predict(responseMessage)
-                 story = Story.objects.get(id=ObjectId(storyId))
-                except:
-                    payload = {"roomId": room_id, "text": "Sorry! i cant find your question", "personEmail": toPersonEmail}
-                    response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
-                                                data=json.dumps(payload),
-                                                headers=headers)
-                    print(response.status_code)
-                    return response.status_code
-
-                print("Speech Response", story.speechResponse)
-                print("response message", responseMessage)
-                # toPersonEmail = messageDetails.json().get('personEmail')
-                print("person email", toPersonEmail);
-
-                payload = {"roomId": room_id, "text": story.speechResponse,"personEmail":toPersonEmail}
-                response = requests.request("POST", "https://api.ciscospark.com/v1/messages/", data=json.dumps(payload),
-                                            headers=headers)
-                print("In send message response", response.status_code)
-
-                return response.status_code
-        else:
-            return ""
-
-    except :
-        print("In Except ")
-        return ""'''
-
-
-
 
 
 
