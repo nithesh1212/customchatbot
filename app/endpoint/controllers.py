@@ -367,21 +367,7 @@ def sparkapi():
                     resStrong=story.speechResponse
                     lis1=resStrong.splitlines();
                     print(lis1)
-
-                    jsondata='''{
-	                                "id": "Y2lzY29zcGFyazovL3VzL1dFQkhPT0svNGJkYWY5NGEtNTE0Yy00Y2Y2LWJhYmYtZTcyYzQyMTc3YzVh",
-                                    "name": "api testing bot",
-                                    "targetUrl": "https://0efbd827.ngrok.io/api/sparktest",
-                                    "resource": "messages",
-                                    "event": "all",
-                                    "orgId": "Y2lzY29zcGFyazovL3VzL09SR0FOSVpBVElPTi8xZWI2NWZkZi05NjQzLTQxN2YtOTk3NC1hZDcyY2FlMGUxMGY",
-                                    "createdBy": "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zZDUyNWVkNy0yNGQ2LTQyNDQtYjc1Yy05MTg3ZjkxMWRmYTU",
-                                    "appId": "Y2lzY29zcGFyazovL3VzL0FQUExJQ0FUSU9OL0MzMmM4MDc3NDBjNmU3ZGYxMWRhZjE2ZjIyOGRmNjI4YmJjYTQ5YmE1MmZlY2JiMmM3ZDUxNWNiNGEwY2M5MWFh",
-                                    "ownedBy": "creator",
-                                    "status": "active",
-                                    "created": "2018-05-08T05:43:10.832Z"
-                                }'''
-                    data = json.loads(jsondata)
+                    data = json.loads(result)
                     tempString=""
                     for id in lis1:
                         tempString+="**"+id+"**"+ ": "
