@@ -20,18 +20,18 @@ from app.stories.models import Story
 from requests import session
 
 #Prod Bot
-botEmail = "marvel@sparkbot.io"  # bot's email address
-accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
+#botEmail = "marvel@sparkbot.io"  # bot's email address
+#accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
 
 
-host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
-headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
-
-#local bot
-#botEmail = "apitesting@sparkbot.io"  # bot's email address
-#accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
 #host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
 #headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
+
+#local bot
+botEmail = "apitesting@sparkbot.io"  # bot's email address
+accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
+host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
+headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
 class SilentUndefined(Undefined):
     def _fail_with_undefined_error(self, *args, **kwargs):
@@ -82,6 +82,14 @@ def callApi(url, type, parameters, isJson=False):
     result = response.text
     print(result)
     return result
+
+
+def is_json(myjson):
+    try:
+        json_object=json.loads(myjson)
+    except:
+        return False
+    return True
 
 
 # Request Handler
@@ -286,14 +294,15 @@ def sparkapi():
 
 
 
-            print("In first if Parameter Status", session.__getattribute__('parameterStatus'))
-            print("In first if Parameters ", session.__getattribute__('parameters'));
-            print("Length of parameters ",len(session.__getattribute__('parameters')))
+            #print("In first if Parameter Status", session.__getattribute__('parameterStatus'))
+            #print("In first if Parameters ", session.__getattribute__('parameters'));
+            #print("Length of parameters ",len(session.__getattribute__('parameters')))
             paramList=list(session.__getattribute__('parameters'))
+            tempParamList=list(session.__getattribute__('parameters'))
             paramLength=len(session.__getattribute__('parameters'))
-            print("Lengtrh....",paramLength)
-            print("Param List",paramList)
-            print("Param List type ", type(paramList))
+            #print("Lengtrh....",paramLength)
+            #print("Param List",paramList)
+            #print("Param List type ", type(paramList))
 
             if(paramLength!=0):
                 parameter=paramList[index]
@@ -314,88 +323,126 @@ def sparkapi():
 
             del paramList[index]
 
-            print("Length111111 ",len(paramList))
+            #print("Length111111 ",len(paramList))
             session.__setattr__('parameters',paramList)
 
             print()
-            print("Dict.....",session.__getattribute__('finParam'))
-            print("Session parameters length??????? ",len(session.__getattribute__('parameters')))
+            #print("Dict.....",session.__getattribute__('finParam'))
+            #print("Session parameters length??????? ",len(session.__getattribute__('parameters')))
            #     print(paramLength)
             paramListLength = len(paramList)
             if(paramListLength==0):
+                print(paramDict)
+                print(list(session.__getattribute__('tempparameters')))
+                tempParam=list(session.__getattribute__('tempparameters'))
                 story = Story.objects.get(id=ObjectId(session.__getattribute__('storyId')))
                 if(story.apiTrigger==True):
                     apiDetails= story.apiDetails
                     print("URL ",apiDetails.url)
-                    print("Request type",apiDetails.requestType)
-                    print("Is JSON ",apiDetails.isJson)
-                    print("JSON Data ",apiDetails.jsonData)
+                    print("Testing..........")
+                    print(type(apiDetails.url))
+                    apiURL=apiDetails.url
+                    #len1=apiURL.find("?")
 
-                    result = callApi(story.apiDetails.url,
+                    if story.apiDetails.requestType=="GET":
+                     actapi =apiURL+"?"+str(tempParam[0].name)+"="+str(paramDict[tempParam[0].name])
+                    else:
+                        actapi=apiURL
+                    print("before Loop", actapi)
+                    print("Length13456789",len(tempParam))
+                    temParamLen = len(tempParam)
+                    if story.apiDetails.requestType == "GET":
+
+                        for i in range(1,temParamLen-1):
+                            actapi+=actapi+"&"+str(tempParam[i])+"="+str(paramDict[tempParam[i]])
+
+                        result = callApi(actapi,
                                      story.apiDetails.requestType,
-                                     story.apiDetails.jsonData,story.apiDetails.isJson)
+                                     story.apiDetails.jsonData, story.apiDetails.isJson)
+                    else:
+                        result = callApi(actapi,
+                                         story.apiDetails.requestType,
+                                         json.dumps(paramDict), story.apiDetails.isJson)
 
                     print("Before json..........")
 
+                    if is_json(result):
+                        resDict = json.loads(result);
 
+                        if isinstance(resDict, dict) and 'listName' in resDict:
+                            resDict = resDict['listName']
 
+                        print("Sdfghjhgfc ", resDict)
 
-                    resDict=json.loads(result);
+                        print("Type of redDict ", type(resDict))
+                        print("Keys ", resDict.keys());
+                        print("Type of keys", type(resDict.keys))
+                        print("Values ", resDict.values())
+                        print("Type of values", type(resDict.values))
 
-                    if isinstance(resDict, dict) and 'listName' in resDict:
-                        resDict = resDict['listName']
+                        for key in resDict.keys():
+                            print("Key", key)
 
-                    print("Sdfghjhgfc ",resDict)
+                        for value in resDict.values():
+                            print("Value", value)
 
-                    print("Type of redDict ",type(resDict))
-                    print("Keys ",resDict.keys());
-                    print("Type of keys",type(resDict.keys))
-                    print("Values ",resDict.values())
-                    print("Type of values",type(resDict.values))
+                        print(type(json.dumps(json.loads(result), indent=4, sort_keys=True)))
 
+                        print("Speech Response", story.speechResponse);
 
-                    for key in resDict.keys():
-                        print("Key",key)
+                        resStrong = story.speechResponse
+                        lis1 = resStrong.splitlines();
+                        print(lis1)
+                        data = json.loads(result)
+                        tempString = ""
+                        try:
+                            for id in lis1:
+                                tempString += "**" + id + "**" + ": "
+                                tempString += data[id] + ""
+                                tempString += "<br>"
+                        except:
+                            payload = {"roomId": roomId, "markdown": "JSON could not be parsed Please verify configuration", "personEmail": email}
+                            response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
+                                                        data=json.dumps(payload),
+                                                        headers=headers)
+                            print(response.text)
+                            return response.status_code
 
-                    for value in resDict.values():
-                        print("Value",value)
+                        print("Before")
+                        print(type(data))
+                        print(type(data.keys()))
+                        print(data.values())
+                        for key in data.keys():
+                            print("Key ", key)
+                            print("Value", data[key])
+                        print("After")
+                        # print (json_normalize(data['flight']))
 
-                    print(type(json.dumps(json.loads(result),indent=4,sort_keys=True)))
+                        session.__setattr__('storyId', '')
+                        session.__setattr__('parameterStatus', False)
+                        session.__setattr__('parameters', '')
+                        print("testtttttttttttttt,..........", session.__getattribute__('storyId'))
 
-                    print("Speech Response",story.speechResponse);
-
-                    resStrong=story.speechResponse
-                    lis1=resStrong.splitlines();
-                    print(lis1)
-                    data = json.loads(result)
-                    tempString=""
-                    for id in lis1:
-                        tempString+="**"+id+"**"+ ": "
-                        tempString+=data[id]+""
-                        tempString+="<br>"
-                    print("Before")
-                    print(type(data))
-                    print(type(data.keys()))
-                    print(data.values())
-                    for key in data.keys():
-                        print("Key ",key)
-                        print("Value",data[key])
-                    print("After")
-                    #print (json_normalize(data['flight']))
-
-
-
-                    session.__setattr__('storyId','')
-                    session.__setattr__('parameterStatus',False)
-                    session.__setattr__('parameters','')
-                    print("testtttttttttttttt,..........",session.__getattribute__('storyId'))
-
-                    if(result):
-                        payload = {"roomId": roomId, "markdown": tempString , "personEmail": email}
+                        if (result):
+                            payload = {"roomId": roomId, "markdown": tempString, "personEmail": email}
+                            response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
+                                                        data=json.dumps(payload),
+                                                        headers=headers)
+                            print(response.text)
+                            return response.status_code
+                        session.__setattribute__('tempparameters', '')
+                    else:
+                        payload = {"roomId": roomId, "markdown": result, "personEmail": email}
                         response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
                                                     data=json.dumps(payload),
                                                     headers=headers)
                         print(response.text)
+
+                        session.__setattribute__('tempparameters', '')
+                        session.__setattr__('storyId', '')
+                        session.__setattr__('parameterStatus', False)
+                        session.__setattr__('parameters', '')
+
                         return response.status_code
 
             #return response.status_code
@@ -426,6 +473,7 @@ def sparkapi():
             if (story.parameters):
                 session.__setattr__('parameterStatus', True)
                 session.__setattr__('parameters',story.parameters)
+                session.__setattr__('tempparameters',story.parameters)
                 session.__setattr__('storyId',storyId)
                 for parameter in story.parameters:
                     payload = {"roomId": roomId, "text": str(parameter.prompt),
@@ -434,6 +482,72 @@ def sparkapi():
                                                 data=json.dumps(payload),
                                                 headers=headers)
 
+                    return response.status_code
+            elif (story.apiTrigger and not story.parameters):
+                print("In else if where parameters=0 and apitrigger true")
+                result1 = callApi(story.apiDetails.url,
+                                 story.apiDetails.requestType,
+                                 story.apiDetails.jsonData, story.apiDetails.isJson)
+                print("Before json..........")
+
+                if is_json(result1):
+
+                    resDict = json.loads(result1);
+
+                    if isinstance(resDict, dict) and 'listName' in resDict:
+                        resDict = resDict['listName']
+
+                    print("Sdfghjhgfc ", resDict)
+
+                    print("Type of redDict ", type(resDict))
+                    print("Keys ", resDict.keys());
+                    print("Type of keys", type(resDict.keys))
+                    print("Values ", resDict.values())
+                    print("Type of values", type(resDict.values))
+
+                    for key in resDict.keys():
+                        print("Key", key)
+
+                    for value in resDict.values():
+                        print("Value", value)
+
+                    print(type(json.dumps(json.loads(result1), indent=4, sort_keys=True)))
+
+                    print("Speech Response", story.speechResponse);
+
+                    resStrong = story.speechResponse
+                    lis1 = resStrong.splitlines();
+                    print(lis1)
+                    data = json.loads(result1)
+                    tempString = ""
+                    for id in lis1:
+                        tempString += "**" + id + "**" + ": "
+                        tempString += str(data[id]) + ""
+                        tempString += "<br>"
+                    print("Before")
+                    print(type(data))
+                    print(type(data.keys()))
+                    print(data.values())
+                    for key in data.keys():
+                        print("Key ", key)
+                        print("Value", data[key])
+                    print("After")
+
+                    if (result1):
+                        payload = {"roomId": roomId, "markdown": tempString, "personEmail": email}
+                        response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
+                                                    data=json.dumps(payload),
+                                                    headers=headers)
+                        print(response.text)
+                        return response.status_code
+
+                    # print (json_normalize(data['flight']))
+                else:
+                    payload = {"roomId": roomId, "markdown": result1, "personEmail": email}
+                    response = requests.request("POST", "https://api.ciscospark.com/v1/messages/",
+                                                data=json.dumps(payload),
+                                                headers=headers)
+                    print(response.text)
                     return response.status_code
 
             payload = {"roomId": roomId, "text": story.speechResponse,
