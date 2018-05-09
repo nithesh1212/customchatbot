@@ -20,16 +20,16 @@ from app.stories.models import Story
 from requests import session
 
 #Prod Bot
-#botEmail = "marvel@sparkbot.io"  # bot's email address
-#accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
+botEmail = "marvel@sparkbot.io"  # bot's email address
+accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
 
 
 #host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
 #headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
 #local bot
-botEmail = "apitesting@sparkbot.io"  # bot's email address
-accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
+#botEmail = "apitesting@sparkbot.io"  # bot's email address
+#accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
 host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
 headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
