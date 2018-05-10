@@ -71,7 +71,7 @@ class ApiDetails(EmbeddedDocument):
 
 
 class Story(Document):
-    storyName = StringField(max_length=100, required=True, unique=True)
+    storyName = StringField(max_length=1000, required=True, unique=True)
     intentName = StringField(required=True)
     apiTrigger = BooleanField(required=True)
     apiDetails = EmbeddedDocumentField(ApiDetails)
