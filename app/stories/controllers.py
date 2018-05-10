@@ -164,7 +164,7 @@ def createStory():
 
 @stories.route('/')
 def readStories():
-    stories = Story.objects(apiTrigger=True)
+    stories = Story.objects()
     return buildResponse.sentJson(stories.to_json())
 
 
