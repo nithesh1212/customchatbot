@@ -22,19 +22,25 @@ def sentToTokens(sent):
 
 
 def train(storyId):
+    print("In sequence label ")
     story = Story.objects.get(id=ObjectId(storyId))
     labeledSentences = story.labeledSentences
 
-    print(labeledSentences);
+    print("LabeledSentences",labeledSentences);
 
     trainSentences = []
     for item in labeledSentences:
+        #print("Item data",item.data)
         trainSentences.append(item.data)
+    #print("Trained sentences",trainSentences)
 
     features = [sentToFeatures(s) for s in trainSentences]
+    #print("Features",features)
     labels = [sentToLabels(s) for s in trainSentences]
+    #print("Lables",labels)
 
     trainer = pycrfsuite.Trainer(verbose=False)
+    #print("Trainer",trainer)
     for xseq, yseq in zip(features, labels):
         trainer.append(xseq, yseq)
 
@@ -46,7 +52,10 @@ def train(storyId):
         # include transitions that are possible, but not observed
         'feature.possible_transitions': True
     })
+    #print("Story Id",storyId)
     trainer.train('model_files/%s.model' % storyId)
+    #print("Last")
+
     return True
 
 

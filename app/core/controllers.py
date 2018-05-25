@@ -21,12 +21,15 @@ def buildModel(storyId):
 def sentenceTokenize():
     sentences = html2text.html2text(request.form['sentences'])
     result = nlp.sentenceTokenize(sentences)
+
     return buildResponse.sentPlainText(result)
 
 
 @core.route('/posTagAndLabel', methods=['POST'])
 def posTagAndLabel():
     sentences = request.form['sentences']
+    print("Sentences",sentences)
     cleanSentences = html2text.html2text(sentences)
     result = nlp.posTagAndLabel(cleanSentences)
+    print("Result ", result)
     return buildResponse.buildJson(result)

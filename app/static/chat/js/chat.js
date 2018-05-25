@@ -1,5 +1,6 @@
 $(document).ready(function ()
  {
+    botName=$("#bt1").val();
     talking = true;
 
     if (typeof(Storage) !== "undefined")
@@ -17,7 +18,9 @@ $(document).ready(function ()
             "speechResponse": "Hello",
             "intent": {},
             "input": "init_conversation",
-            "missingParameters": []
+            "missingParameters": [],
+            "botId":"",
+            "botName":""
         }
 
     }
@@ -34,17 +37,19 @@ $(document).ready(function ()
     }
 
     var put_text = function (bot_say) {
-        $(".payloadPreview")[0].innerHTML = JSON.stringify(bot_say, null,5);
+        //$(".payloadPreview")[0].innerHTML = JSON.stringify(bot_say, null,5);
 
         payload  = bot_say;
         Speech(bot_say["speechResponse"]);
-        html_data = '<li class="left clearfix"><div class="chat-body clearfix"><strong class="primary-font">CiscoBot</strong><p>' + bot_say["speechResponse"] + '</p> </div></li>';
+        html_data = '<li class="left clearfix"><div class="chat-body clearfix"><strong class="primary-font">'+botName+'</strong><p>' + bot_say["speechResponse"] + '</p> </div></li>';
         $("ul.chat").append(html_data);
         scrollToBottom();
     };
 
-    var send_req = function (userQuery) {
+    var send_req = function (userQuery,botid,botname) {
         payload["input"] = userQuery;
+        payload["botId"] =botid;
+        payload["botName"] =botname;
      //console.log(payload["input"])
         console.log(JSON.stringify(payload))
         $.ajax({
@@ -83,9 +88,80 @@ $(document).ready(function ()
         put_text(responseObject);
     };
 
+    login=function (username,password) {
+        payload1={
+        "username":username,
+        "password":password
+        }
+        //console.log(payload["input"])
+        console.log(JSON.stringify(payload1))
+        $.ajax({
+            url: '/stories/login',
+            type: 'POST',
+            data: JSON.stringify(payload1),
+            contentType: 'application/json; charset=utf-8',
+            datatype: "json",
+            success: checkValid
+
+        });
+        return true;
+
+    };
+        createBot=function (botName,botDescription) {
+        payload2={
+        "botName":botName,
+        "botDescription":botDescription,
+
+        }
+        //console.log(payload["input"])
+        console.log(JSON.stringify(payload2))
+        $.ajax({
+            url: '/stories/bot',
+            type: 'POST',
+            data: JSON.stringify(payload2),
+            contentType: 'application/json; charset=utf-8',
+            datatype: "json",
+            success:botCreated
+
+
+        });
+        return true;
+
+    };
+
+    checkValid = function (response) {
+        var responseObject;
+        alert(response)
+        if (response == 'validuser') {
+           window.location.href = '/stories/bots/home';
+        }
+        else if(response=='NoUser')
+        {
+            document.getElementById("errormsg").innerHTML="User Name is not valid"
+        }
+        else
+        {
+
+            document.getElementById("errormsg").innerHTML="Password is not valid"
+        }
+    };
+
+    botCreated = function (response) {
+        var responseObject;
+        if (response == 'BotCreated') {
+           window.location.href = '/stories/bots/home';
+        }
+
+        else
+        {
+
+            alert("Error in bot creation")
+        }
+    };
 
 
     send_req("init_conversation");
+
 
 
     $('#btn-input').keydown(function (e) {
@@ -101,11 +177,24 @@ $(document).ready(function ()
 
     $('#btn-chat').click(function () {
         userQuery = $("#btn-input").val();
+        botId=$("#bt").val();
+        botName=$("#bt1").val();
         $("#btn-input").val("");
         html_data = '<li class="right clearfix"><div class="chat-body clearfix"><strong class="primary-font">you</strong><p>' + userQuery + '</p> </div></li>';
         $("ul.chat").append(html_data);
-        send_req(userQuery);
+        send_req(userQuery,botId,botName);
     })
+    $('#btn-login').click(function () {
+        username = $("#name").val();
+        password=$("#pass").val();
+        login(window.btoa(username),window.btoa(password));
+    })
+    $('#btn-createBot').click(function () {
+        botName = $("#botName").val();
+        botDescription=$("#botDescription").val();
+        createBot(botName,botDescription);
+    })
+
 
     function Speech(say) {
       if ('speechSynthesis' in window && talking) {

@@ -67,7 +67,9 @@ class ApiDetails(EmbeddedDocument):
             "PUT"],
         required=True)
     isJson = BooleanField(default=False)
+    isHeader=BooleanField(default=False)
     jsonData = StringField(default="{}")
+    headerData= StringField(default="{}")
 
 
 class Story(Document):
@@ -78,3 +80,20 @@ class Story(Document):
     speechResponse = StringField(required=True)
     parameters = ListField(EmbeddedDocumentField(Parameter))
     labeledSentences = EmbeddedDocumentListField(LabeledSentences)
+    botId = ObjectIdField(required=True, default=lambda: ObjectId())
+
+class User(Document):
+    userId=ObjectIdField(required=True, default=lambda: ObjectId())
+    userName=StringField(max_length=100,required=True,unique=True)
+    password=StringField(max_length=100,required=True)
+
+class Bot(Document):
+    botId=ObjectIdField(required=True, default=lambda: ObjectId())
+    botName=StringField(max_length=100,required=True)
+    botDescription=StringField(max_length=1000,required=True)
+    userId =ObjectIdField(required=True, default=lambda: ObjectId())
+    channelId=ObjectIdField(required=True, default=lambda: ObjectId())
+
+class Channel(Document):
+    channelId=ObjectIdField(required=True, default=lambda: ObjectId())
+    channelName=StringField(max_length=100,required=True)

@@ -1,0 +1,60 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/commons/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/chat/css/chat.css">
+    <script src="/static/commons/js/jquery.min.js"></script>
+    <script src="/static/commons/js/bootstrap.min.js"></script>
+    <script src="/static/chat/js/chat.js"></script>
+</head>
+
+
+<div class="container">
+    <div class="page-header">
+        <h1>{{ botName }}</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 chat-area">
+            <ul class="chat">
+            </ul>
+            <hr id="hr1">
+            <div class="footer">
+                <div class="input-group">
+                    <input id="btn-input" type="text" class="form-control input-sm"
+                           placeholder="Type your message here..."/>
+                    <span class="input-group-btn">
+                                <button class="btn btn-warning btn-sm" id="btn-chat">
+                                    Send</button>
+                        <input type="hidden" id="bt" value="{{ botId }}">
+                        <input type="hidden" id="bt1" value="{{ botName }}">
+                             </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+
+
+            <a href="/stories/home/{{ botId }}"  style="text-align:  right; padding-left: 294px; font-size:  30px;">Manage Intents</a>
+            <p style="font-size: 20px;padding-left: 90px;">Manage Intents helps the user in creating intents as well as editing the existing intents. Using this feature user can create actions in a third party system using API's </p>
+
+
+
+            <a href="/stories/upload/{{ botId }}" style="text-align:  right; padding-left: 294px; font-size:  30px;">Upload FAQ's</a>
+            <p style="font-size: 20px;padding-left: 90px;">Upload FAQ's helps the user to ad multiple FAQ's at aone step using csv file (format available in the Upload FAQ Page.</p>
+
+
+
+            <a href="/stories/spark/{{ botId }}" style="text-align:  right; padding-left: 225px; font-size:  30px;">Integrate with Cisco Spark</a>
+            <p style="font-size: 20px;padding-left: 90px;">Using this feature user can integrate Bot with Cisco Spark and use this bot in Cisco Spark</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <footer class="footer">
+
+
+    </footer>
+</div>
+</body>
+</html>

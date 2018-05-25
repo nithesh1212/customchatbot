@@ -1,0 +1,161 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/commons/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/chat/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/chat/css/login.css">
+	
+    <script src="/static/commons/js/jquery.min.js"></script>
+    <script src="/static/commons/js/bootstrap.min.js"></script>
+    <script src="/static/stories/js/stories.js"></script>
+</head>
+<body>
+
+        <div id="navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="index.html">
+                            <img src="static/images/logo.png" class="img-responsive" alt="">
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <p>Welcome to <strong>John Doe</strong></p>
+                            </li>
+                            <li><a href="#header"><i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+                            <li><a href="#team"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                            <li><a href="#aboutus"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
+                            <li><a href="#portfolio"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
+                            <li><a href="#contact"><i class="fa fa-headphones" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+<div class="container" style="margin-top:100px;min-height:600px">
+    <div class="container-story">
+		<div class="story-head">
+			<h1>Create new intent for {{ botName }}</h1>
+
+
+               <a padding-left="800px" href="/stories/home/{{ botId }}">Click to check your existing intents</a>
+        </div>
+
+
+        <div class="form-group newStory">
+                <div class="span4">
+                    <input type="text" class="form-control" id="botname" value="{{ botName }}" disabled>
+                    <input type="hidden" class="form-control" id="botid" value="{{ botId }}" disabled >
+                    <input type="text" class="form-control" id="storyName" placeholder="Story name" required>
+                </div>
+                <div class="span4">
+                    <input class="form-control" placeholder="Intent" size="50" id="intentName" type="text" required>
+                </div>
+                <div class="span4"><div class="clear"></div> </div>
+                <div class="span4">
+                    <div class="panel-body">
+                        <div class="col-md-6">
+                            <input class="form-control" placeholder="Parameter name" size="50" id="paramName" type="text">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-control param-type" id="paramEntityType" value="free_text">
+                                <option value="mobile">Mobile number</option>
+                                <option value="email">Email</option>
+                                <option value="free_text">Free Text</option>
+                                <option value="number">Number</option>
+                                <option value="list">List</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="checkbox">
+                              <label><input type="checkbox" id="paramRequired" value="">Required</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control" placeholder="Prompt" id="prompt"  required></textarea>
+                        </div>
+                        <div class="pull-right">
+                            <br>
+                            <button type="button" class="btn btn-info" id="btnAddParam">Add parameter</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="span4">
+                     <div class="col-md-1">
+                            <div class="checkbox">
+                              <label><input type="checkbox" id="apiTrigger" value=""> API trigger </label>
+                            </div>
+                        </div>
+                    <div class="col-md-1">
+                            <div class="checkbox">
+                              <label><input type="checkbox" id="isJson" value=""  disabled> JSON </label>
+                            </div>
+                        </div>
+                    <div class="col-md-1">
+                        <div class="checkbox">
+                            <label><input type="checkbox" id="isHeader" value=""  disabled> Headers</label>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <input class="form-control" placeholder="API url" id="apiUrl" type="text" disabled>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control" id="requestType" disabled>
+                            <option value="GET" selected="selected">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="POST">PUT</option>
+                            <option value="POST">DELETE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="span4" id="jsoneditor">
+                    <textarea id="jsonData" placeholder="Enter json">{}</textarea>
+                </div>
+                <div class="span4" id="headereditor">
+                    <textarea id="headerData" hidden placeholder="Enter headers">{}</textarea>
+                </div>
+
+                <div class="span4">
+                    <textarea class="form-control" placeholder="Speech response" size="50" id="speechResponse"  required></textarea>
+                <i>Extracted parameters and api call response can be accessed from speech respone using "parameters" and "result" objects respectively</i>
+                </div>
+                <div class="span4">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-success" id="btnCreateStory">Save</button>
+                    </div>
+                </div>
+                <br/><br/><br/>
+
+            </div>
+	
+    </div>
+        
+</div>
+
+<div id="footer" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul>
+                        <li><a href="">Contacts</a></li> |
+                        <li><a href="">Feedback</a></li> |
+                        <li><a href="">Help</a></li> |
+                        <li><a href="">Site Map</a></li> |
+                        <li><a href="">Terms & Conditions</a></li> |
+                        <li><a href="">Privacy Statement</a></li> |
+                        <li><a href="">cookie Policy</a></li> |
+                        <li><a href="">Trademarks</a></li>
+                    </ul>
+                </div>
+            </div>
+	</div>
+    </div>
+
+</body>
+</html>

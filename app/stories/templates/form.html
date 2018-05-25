@@ -1,0 +1,82 @@
+<html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="/static/commons/css/bootstrap.min.css">
+			<link rel="stylesheet" href="/static/chat/font-awesome-4.7.0/css/font-awesome.min.css">
+			<link rel="stylesheet" type="text/css" href="/static/chat/css/login.css">
+			<script src="/static/commons/js/jquery.min.js"></script>
+			<script src="/static/commons/js/bootstrap.min.js"></script>
+			<script src="/static/chat/js/chat.js"></script>
+        </head>
+        <body>
+
+        <b>This istest</b>
+        <b>{{ userId }}</b>
+		
+        <div id="navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="index.html">
+                            <img src="/static/images/logo.png" class="img-responsive" alt="">
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <p>Welcome to <strong>John Doe</strong></p>
+                            </li>
+                            <li><a href="#header"><i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+                            <li><a href="#team"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                            <li><a href="#aboutus"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
+                            <li><a href="#portfolio"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
+                            <li><a href="#contact"><i class="fa fa-headphones" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        <div class="container" style="margin-top:100px;min-height:600px;position:relative;top:10%">
+            <div>
+                    <form>
+                            <div class="form-group">
+                                    <label for="Name">Chatbot Name:</label>
+                                    <input type="text" id="botName" placeholder="Enter Chatbot Name.." class="form-control"/>
+
+                            </div>
+                            <div class="form-group">
+                                    <label for="Description">Description:</label>
+                                    <textarea class="form-control" id="botDescription" rows="3" style="width: 100%"  placeholder="Add description here..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <a type="button" id="btn-createBot" class="btn btn-warning" style="margin-top:10px">
+                                    Submit
+                                </a>
+                            </div>
+                    </form>
+            </div>
+        </div>
+        <div id="footer" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul>
+                        <li><a href="">Contacts</a></li> |
+                        <li><a href="">Feedback</a></li> |
+                        <li><a href="">Help</a></li> |
+                        <li><a href="">Site Map</a></li> |
+                        <li><a href="">Terms & Conditions</a></li> |
+                        <li><a href="">Privacy Statement</a></li> |
+                        <li><a href="">cookie Policy</a></li> |
+                        <li><a href="">Trademarks</a></li>
+                    </ul>
+                </div>
+            </div>
+	</div>
+    </div>
+
+        
+        </body>
+</html>

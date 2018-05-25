@@ -20,16 +20,16 @@ from app.stories.models import Story
 from requests import session
 
 #Prod Bot
-botEmail = "marvel@sparkbot.io"  # bot's email address
-accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
+#botEmail = "marvel@sparkbot.io"  # bot's email address
+#accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
 
 
 #host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
 #headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
 #local bot
-#botEmail = "apitesting@sparkbot.io"  # bot's email address
-#accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
+botEmail = "apitesting@sparkbot.io"  # bot's email address
+accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
 host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
 headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
@@ -55,26 +55,53 @@ index=0;
 paramDict={}
 
 
-def callApi(url, type, parameters, isJson=False):
-    print(url, type, parameters, isJson)
+def callApi(url, type, parameters, headerData, isJson=False,isHeader=False ):
+    print(url, type, parameters, isJson, isHeader, headerData)
 
     if "GET" in type:
-        if isJson:
+        if isJson and isHeader:
+            print(parameters)
+            response = requests.get(url, json=json.loads(parameters),headers=json.loads(headerData))
+        elif isJson:
             print(parameters)
             response = requests.get(url, json=json.loads(parameters))
-
+        elif isHeader:
+            print(parameters)
+            response = requests.get(url, headers=json.loads(headerData))
+        elif len(parameters)==0:
+            response = requests.get(url)
         else:
             response = requests.get(url, params=parameters)
     elif "POST" in type:
-        if isJson:
+        if isJson and isHeader:
+            print(parameters)
+            response = requests.post(url, json=json.loads(parameters),headers=json.loads(headerData))
+        elif isJson:
+            print(parameters)
             response = requests.post(url, json=json.loads(parameters))
+        elif isHeader:
+            print(parameters)
+            response = requests.post(url, headers=json.loads(headerData))
+        elif len(parameters)==0:
+            response = requests.post(url)
         else:
-            response = requests.post(url, data=parameters)
+            response = requests.post(url, params=parameters)
+
     elif "PUT" in type:
-        if isJson:
+        if isJson and isHeader:
+            print(parameters)
+            response = requests.put(url, json=json.loads(parameters),headers=json.loads(headerData))
+        elif isJson:
+            print(parameters)
             response = requests.put(url, json=json.loads(parameters))
+        elif isHeader:
+            print(parameters)
+            response = requests.put(url, headers=json.loads(headerData))
+        elif len(parameters)==0:
+            response = requests.put(url)
         else:
-            response = requests.put(url, data=parameters)
+            response = requests.put(url, params=parameters)
+
     elif "DELETE" in type:
         response = requests.delete(url)
     else:
@@ -86,7 +113,7 @@ def callApi(url, type, parameters, isJson=False):
 
 def is_json(myjson):
     try:
-        json_object=json.loads(myjson)
+     json.loads(myjson)
     except:
         return False
     return True
@@ -99,6 +126,7 @@ def api():
     requestJson = request.get_json(silent=True)
     resultJson = requestJson
     print("Test.....", requestJson)
+    print("Bot Iddddddddddddddddddddddddddddddd",requestJson.get("botId"))
     if requestJson:
 
 
@@ -122,10 +150,12 @@ def api():
 
             logger.info(requestJson.get("input"), extra=resultJson)
             return buildResponse.buildJson(resultJson)
+        print("OutSide if")
 
         intentClassifier = IntentClassifier()
         try:
             storyId = intentClassifier.predict(requestJson.get("input"))
+            print("Story Id",storyId)
         except AttributeError:
             resultJson["speechResponse"]="Question not available"
             return buildResponse.buildJson(resultJson)
@@ -222,19 +252,30 @@ def api():
         if resultJson["complete"]: 
             if story.apiTrigger:
                 isJson = False
+                isHeader=False
                 parameters = resultJson["extractedParameters"]
 
                 urlTemplate = Template(story.apiDetails.url, undefined=SilentUndefined)
                 renderedUrl = urlTemplate.render(**context)
-                if story.apiDetails.isJson:
+                if story.apiDetails.isJson and story.apiDetails.isHeader:
                     isJson = True
-                    requestTemplate = Template(story.apiDetails.jsonData, undefined=SilentUndefined)
+                    isHeader= True
+                    requestTemplate = Template(story.apiDetails.jsonData,story.apiDetails.headerData, undefined=SilentUndefined)
                     parameters = requestTemplate.render(**context)
-
+                elif story.apiDetails.isJson:
+                    isJson = True
+                    requestTemplate = Template(story.apiDetails.jsonData,
+                                               undefined=SilentUndefined)
+                    parameters = requestTemplate.render(**context)
+                elif story.apiDetails.isHeader:
+                    isHeader = True
+                    requestTemplate = Template(story.apiDetails.headerData,
+                                               undefined=SilentUndefined)
+                    parameters = requestTemplate.render(**context)
                 try:
                     result = callApi(renderedUrl,
                                      story.apiDetails.requestType,
-                                     parameters,isJson)
+                                     parameters,story.apiDetails.headerData,isJson,isHeader)
                 except Exception as e:
                     print(e)
                     resultJson["speechResponse"] = "Service is not available. "
