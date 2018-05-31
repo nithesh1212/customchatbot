@@ -3,7 +3,7 @@ $(document).ready(function() {
 	$("#prompt").hide();
 	function getStories()
 	{
-		$.get("/stories", {},
+	    $.get("/stories/read1", {},
 			function(data)
 			{
 			    html = "<center>No stories found!</center>"
@@ -13,19 +13,34 @@ $(document).ready(function() {
                     $.each(data, function(idx, obj)
                     {
                         html += '<div class="story" objId='+obj._id.$oid+'>\
-                                    <h2 class="">'+ obj.storyName +'</h2> \
-                                    <button type="button" class="btn btn-primary" id="btnEdit" objId='+obj._id.$oid+' >Edit</button>\
-                                    <button type="button" class="btn btn-primary" id="btnTrain" objId='+obj._id.$oid+' >Train</button>\
-                                    <button type="button" class="btn btn-primary" id="btnDelete" objId='+obj._id.$oid+' >Delete</button>\
-                                    <button type="button" class="btn btn-primary" id="btnBuild" objId='+obj._id.$oid+' >Build Model</button>\
-                                </div>';
+                                    <h4>'+ obj.storyName +'</h4> \
+                                    <button type="submit" class="btn btn-default pull-right" id = "btnEdit" objId='+obj._id.$oid+'>\
+                                    <span class="glyphicon glyphicon-edit" title = "Edit Story" ></span>\
+                                    </button>\
+                                     <button type="submit" class="btn btn-default pull-right" id = "btnDelete" objId='+obj._id.$oid+'>\
+                                    <span class="glyphicon glyphicon-trash" title = "Delete Story"></span>\
+                                    </button>\
+                                     <button type="submit" class="btn btn-default pull-right" id = "btnTrain" objId='+obj._id.$oid+'>\
+                                    <span class="glyphicon glyphicon-road" title = "Train"></span>\
+                                    </button>\
+                                    <button type="submit" class="btn btn-default pull-right" id = "btnBuild" objId='+obj._id.$oid+'>\
+                                    <span class="glyphicon glyphicon-ok-sign" title = "Build Model" ></span>\
+                                    </button>\
+                                    </div>';
                     });
                 }
 				$('.stories').html(html);
 			});
 	}
 
+	function goStories(botid)
+	{
+	    window.location.href='/stories/home/'+botid
+	}
+
+
 	getStories();
+
 
 	$("#btnCreateStory").click(function()
 	{
@@ -36,15 +51,22 @@ $(document).ready(function() {
 			{
 				story.apiTrigger = true;
 				story.apiDetails = {
-				    "isJson":false,
+				    "isJson":true,
+				    "isHeader":true,
 					"url":$("input#apiUrl")[0].value,
 					"requestType":$( "select#requestType option:selected" )[0].value,
 
 				};
-				if($("input#apiTrigger")[0].checked)
+				if($("input#isJson")[0].checked)
 				{
 				    story.apiDetails.isJson = true;
 				    story.apiDetails.jsonData = $("textarea#jsonData")[0].value;
+                }
+                if($("input#isHeader")[0].checked)
+				{
+				    alert("My name id Header")
+				    story.apiDetails.isHeader = true;
+				    story.apiDetails.headerData = $("textarea#headerData")[0].value;
                 }
 
 
@@ -54,23 +76,31 @@ $(document).ready(function() {
 			story.storyName=$("#storyName")[0].value;
 			story.intentName=$("#intentName")[0].value;
 			story.speechResponse=$("#speechResponse")[0].value;
+			story.botId=$("#botid")[0].value;
 			console.log(story);
 			$.ajax({
-				url: '/stories/',
+				url: '/stories/read',
 				type: 'POST',
 				data: JSON.stringify(story),
 				contentType: 'application/json; charset=utf-8',
 				dataType: 'json',
 				async: false,
 				success: function(msg) {
-					alert("Story created successfully.");
-					getStories();
+				    alert("Story created successfully.");
+					goStories(story.botId);
 					story = {};
-					$(".panel-footer")[0].innerHTML="";
-					$("#storyName")[0].value="";
-					$("#intentName")[0].value="";
-					$("#speechResponse")[0].value="";
+					//$(".panel-footer")[0].innerHTML="";
+					//$("#storyName")[0].value="";
+					//$("#intentName")[0].value="";
+					//$("#speechResponse")[0].value="";
+				},
+				error:function(msg)
+				{
+				alert("Can't create story");
+				gotories(story.botId);
+				story={};
 				}
+
 			});
         }
 
@@ -78,11 +108,14 @@ $(document).ready(function() {
 
     $("#uploadCSV").click(function()
 	{
+	    //alert("File uploading.........")
+	    document.getElementById("status").textContent="Uploading............."
 	    var data1 = new FormData();
+	    var botId=$('#upbotId')[0].value;
         jQuery.each(jQuery('#file')[0].files, function(i, file) {
     data1.append('file', file);});
 	    $.ajax({
-				url: '/stories/fileupload',
+				url: '/stories/fileupload/'+botId,
 				data: data1,
                 cache: false,
                 contentType: false,
@@ -91,33 +124,27 @@ $(document).ready(function() {
                 type: 'POST', // For jQuery < 1.9
                 success: function(data1){
                     alert("Successfully Uploaded");
-            }
+                    window.location.href='/stories/home/'+botId
+
+            },
+            error:function(msg)
+				{
+				alert("Unable to upload file");
+
+				document.getElementById("status").textContent="Solutions:<br> 1.Check CSV template<br> 2.Story might already be present."
+
+
+				story={};
+				}
 			});
 
 	});
 
 
-    $("#build").click(function()
-	{
-	    $.ajax({
-				url: '/stories/build',
-				cache: false,
-                contentType: false,
-                processData: false,
-                method: 'GET',
-                type: 'GET', // For jQuery < 1.9
-                success: function(){
-
-                 alert("Successfully build");
-
-            }
-			});
-
-	});
 
 	$(document).on('click', "button#btnEdit", function() {
 		_id = $(this).attr("objId");
-		window.open("/stories/edit/"+_id);
+		window.open("edit/"+_id);
 	});
 
 	$(document).on('click', "button#btnTrain", function() {
@@ -126,7 +153,7 @@ $(document).ready(function() {
 	});
 
 	$(document).on('click', "button#btnDelete", function() {
-		var r =confirm("Do you want to continue?");
+		var r =confirm("Do yo   u want to continue?");
 		if (r == true)
 		{
 			_id = $(this).attr("objId");
@@ -155,12 +182,16 @@ $(document).ready(function() {
 		 	$("input#apiUrl").prop( "disabled", false );
 		 	$("select#requestType").prop( "disabled", false );
 		 	$("input#isJson").prop( "disabled", false );
+		 	$("input#isHeader").prop( "disabled", false );
+
 		 }else{
 		 	$("input#apiUrl").prop( "disabled", true );
 		 	$("select#requestType").prop( "disabled", true );
 		 	$("input#isJson").prop( "disabled", true );
 		 	$("input#isJson").prop( "checked", false );
+		 	$("input#isHeader").prop( "disabled", false );
 		 	$("textarea#jsonData").hide();
+		 	$("textarea#headerData").hide();
 		 }
 	});
 
@@ -169,6 +200,14 @@ $(document).ready(function() {
 		 	$("textarea#jsonData").show();
 		 }else{
             $("textarea#jsonData").hide();
+		 }
+	});
+
+    $(document).on('change', "input#isHeader", function() {
+		 if(this.checked){
+		 	$("textarea#headerData").show();
+		 }else{
+            $("textarea#headerData").hide();
 		 }
 	});
 
@@ -190,7 +229,7 @@ $(document).ready(function() {
 					html +='<div class="row"><div class="col-md-2">'+(index+1)+'</div> <div class="col-md-2">'+param.name+'</div> <div class="col-md-2">'+req+'</div> <div class="col-md-2">'+prom+'</div> </div>';
 		});
 
-		$(".panel-footer")[0].innerHTML=html;
+		$("#param")[0].innerHTML=html;
 
     }
 

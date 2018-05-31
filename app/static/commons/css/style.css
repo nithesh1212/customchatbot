@@ -1,5 +1,5 @@
 body {
-    margin: 20px;
+    /*margin: 20px;*/
     background: #fff;
 }
 hr{
@@ -52,12 +52,12 @@ p.flip {
     color:green;
 }
 
-.footer {
+/*.footer {
   position: absolute;
   bottom: 0;
-  /* Set the fixed height of the footer here */
+  *//* Set the fixed height of the footer here *//*
   height: 60px;
-}
+}*/
 .clear{
     clear: both;
 }
@@ -92,3 +92,5 @@ margin:8px 0px;
     padding: 10px;
     border: .1px dashed gray;
 }
+
+

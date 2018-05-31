@@ -19,20 +19,17 @@
             <a href="/"><img class="logo-left" src="/static/images/iky.png"></a>
         </div>
         <div class="clearfix"></div>
-    </div>
+		</div>
 
+                <input type="text" id="upbotId" value="{{ botId }}" hidden>
                 <div class="span4">
                      <div class="span4">
-                        <input type="file" name="fileupload" value="fileupload" id="file">
-
-
-
-                    </div>
+						<input type="file" name="fileupload" value="fileupload" id="file">
+					  </div>
 
                           <div class="pull-right">
                        <button type="button" class="btn btn-primary" id="uploadCSV">Upload</button>
                          </div>
-
 
                 </div>
 
@@ -49,11 +46,14 @@
                     <br>
                     <br>
                     <br>
-                    <a href="/static/sample.csv" download> Click Here to download he sample </a>
+                    <a href="/static/sample.csv" download> Click Here to download he sample </a><br><br><br><br>
+       <font color="red" size="5"> <span id="status"></span></font>
+
 
 
 
                     </div>
 
+</div>
 </body>
 </html>

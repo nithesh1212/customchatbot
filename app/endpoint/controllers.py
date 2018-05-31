@@ -5,6 +5,7 @@ import requests
 from pandas.io.json import json_normalize
 
 from datetime import datetime
+from app.stories.models import Channel
 
 from jinja2 import Undefined, Template
 
@@ -20,18 +21,18 @@ from app.stories.models import Story
 from requests import session
 
 #Prod Bot
-botEmail = "marvel@sparkbot.io"  # bot's email address
-accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
+#botEmail = "marvel@sparkbot.io"  # bot's email address
+#accessToken = "YzI4YTRiMDctM2EwYy00ZTczLWFjMGQtNTc2ZTBhMWUwNTA4N2YxZjNhZWYtYjYz"  # Bot's access token
 
 
 #host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
 #headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
 #local bot
-#botEmail = "apitesting@sparkbot.io"  # bot's email address
-#accessToken = "ZGM4YmU3NDYtZjZkYi00ZjhjLTllMzItN2U0YTM3NjU4MWEyZGM5ZGZhZWUtNWQx"  # Bot's access token
+botEmail = "demobotforspark@webex.bot"  # bot's email address
+accessToken = "ZjI5ZWMzNzMtYjNiOC00NTc3LWI3Y2ItYzE1YzEzZjE3YjM1NDJiZmM3NmMtMjlm"  # Bot's access token
 host = "https://api.ciscospark.com/v1/"  # end point provided by the CISCO Spark to communicate between their services
-headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
+#headers = {"Authorization": "Bearer %s" % accessToken, "Content-Type": "application/json"}
 
 class SilentUndefined(Undefined):
     def _fail_with_undefined_error(self, *args, **kwargs):
@@ -55,26 +56,53 @@ index=0;
 paramDict={}
 
 
-def callApi(url, type, parameters, isJson=False):
-    print(url, type, parameters, isJson)
+def callApi(url, type, parameters, headerData, isJson=False,isHeader=False ):
+    print(url, type, parameters, isJson, isHeader, headerData)
 
     if "GET" in type:
-        if isJson:
+        if isJson and isHeader:
+            print(parameters)
+            response = requests.get(url, json=json.loads(parameters),headers=json.loads(headerData))
+        elif isJson:
             print(parameters)
             response = requests.get(url, json=json.loads(parameters))
-
+        elif isHeader:
+            print(parameters)
+            response = requests.get(url, headers=json.loads(headerData))
+        elif len(parameters)==0:
+            response = requests.get(url)
         else:
             response = requests.get(url, params=parameters)
     elif "POST" in type:
-        if isJson:
+        if isJson and isHeader:
+            print(parameters)
+            response = requests.post(url, json=json.loads(parameters),headers=json.loads(headerData))
+        elif isJson:
+            print(parameters)
             response = requests.post(url, json=json.loads(parameters))
+        elif isHeader:
+            print(parameters)
+            response = requests.post(url, headers=json.loads(headerData))
+        elif len(parameters)==0:
+            response = requests.post(url)
         else:
-            response = requests.post(url, data=parameters)
+            response = requests.post(url, params=parameters)
+
     elif "PUT" in type:
-        if isJson:
+        if isJson and isHeader:
+            print(parameters)
+            response = requests.put(url, json=json.loads(parameters),headers=json.loads(headerData))
+        elif isJson:
+            print(parameters)
             response = requests.put(url, json=json.loads(parameters))
+        elif isHeader:
+            print(parameters)
+            response = requests.put(url, headers=json.loads(headerData))
+        elif len(parameters)==0:
+            response = requests.put(url)
         else:
-            response = requests.put(url, data=parameters)
+            response = requests.put(url, params=parameters)
+
     elif "DELETE" in type:
         response = requests.delete(url)
     else:
@@ -86,7 +114,7 @@ def callApi(url, type, parameters, isJson=False):
 
 def is_json(myjson):
     try:
-        json_object=json.loads(myjson)
+     json.loads(myjson)
     except:
         return False
     return True
@@ -99,6 +127,7 @@ def api():
     requestJson = request.get_json(silent=True)
     resultJson = requestJson
     print("Test.....", requestJson)
+    print("Bot Iddddddddddddddddddddddddddddddd",requestJson.get("botId"))
     if requestJson:
 
 
@@ -122,10 +151,12 @@ def api():
 
             logger.info(requestJson.get("input"), extra=resultJson)
             return buildResponse.buildJson(resultJson)
+        print("OutSide if")
 
         intentClassifier = IntentClassifier()
         try:
             storyId = intentClassifier.predict(requestJson.get("input"))
+            print("Story Id",storyId)
         except AttributeError:
             resultJson["speechResponse"]="Question not available"
             return buildResponse.buildJson(resultJson)
@@ -222,19 +253,30 @@ def api():
         if resultJson["complete"]: 
             if story.apiTrigger:
                 isJson = False
+                isHeader=False
                 parameters = resultJson["extractedParameters"]
 
                 urlTemplate = Template(story.apiDetails.url, undefined=SilentUndefined)
                 renderedUrl = urlTemplate.render(**context)
-                if story.apiDetails.isJson:
+                if story.apiDetails.isJson and story.apiDetails.isHeader:
                     isJson = True
-                    requestTemplate = Template(story.apiDetails.jsonData, undefined=SilentUndefined)
+                    isHeader= True
+                    requestTemplate = Template(story.apiDetails.jsonData,story.apiDetails.headerData, undefined=SilentUndefined)
                     parameters = requestTemplate.render(**context)
-
+                elif story.apiDetails.isJson:
+                    isJson = True
+                    requestTemplate = Template(story.apiDetails.jsonData,
+                                               undefined=SilentUndefined)
+                    parameters = requestTemplate.render(**context)
+                elif story.apiDetails.isHeader:
+                    isHeader = True
+                    requestTemplate = Template(story.apiDetails.headerData,
+                                               undefined=SilentUndefined)
+                    parameters = requestTemplate.render(**context)
                 try:
                     result = callApi(renderedUrl,
                                      story.apiDetails.requestType,
-                                     parameters,isJson)
+                                     parameters,story.apiDetails.headerData,isJson,isHeader)
                 except Exception as e:
                     print(e)
                     resultJson["speechResponse"] = "Service is not available. "
@@ -275,11 +317,15 @@ def tts():
 
 
 
+@endpoint.route('/spark/<botId>',methods=['POST'])
 
-@endpoint.route('/spark',methods=['POST'])
-
-def sparkapi():
+def sparkapi(botId):
     #session=requests.session()
+
+    print("Bot Id",botId)
+    channel=Channel.objects.get(botId=ObjectId(botId))
+    print("Channel",channel)
+    headers = {"Authorization": "Bearer %s" % channel.botAccessToken, "Content-Type": "application/json"}
 
     print("Spark APi Call")
     print("Request JSON ",request.json)
@@ -289,8 +335,12 @@ def sparkapi():
     print("Room Id ",roomId)
     email=request.json.get('data').get('personEmail')
     print("Email ",email)
-    if email!=botEmail:
+
+    if email!=channel.botEmail:
+        print("Inside first if")
+        print("--------------------------------")
         if(session.__getattribute__('parameterStatus') and len(session.__getattribute__('parameters'))>=0):
+            print("?????????????????????????????????")
 
 
 
@@ -455,6 +505,7 @@ def sparkapi():
 
 
         else:
+            print("++++++++++++++++++===========")
             messageDetails = requests.get(host + "messages/" + messageId, headers=headers)
             print("Message Details JSON ",messageDetails)
             message=messageDetails.json().get('text')
@@ -559,11 +610,12 @@ def sparkapi():
 
             return response.status_code
         return ""
-    elif(email==botEmail and session.__getattribute__('parameterStatus')==True):
+    elif(email==channel.botEmail and session.__getattribute__('parameterStatus')==True):
         print("in second if Parameter Status",session.__getattribute__('parameterStatus'))
         print("in second ifParameters ",session.__getattribute__('parameters'));
         return ""
     else:
+        print("+++++++++++++++++++++++++++")
         return""
 
 
