@@ -1,0 +1,10 @@
+storyName,intentName,apiTrigger,labeledSentences,speechResponse,parameters
+mscq1,msci1,FALSE,Hi,"Hi !!! I'm Marvel Bot your virtual assistant, Ican help you in answering questions, creating tasks in another system",
+mscq2,msci2,FALSE,Hello,"Hi !!! I'm Marvel Bot your virtual assistant, Ican help you in answering questions, creating tasks in another system",
+mscq3,msci3,FALSE,who are you,"Hi !!! I'm Marvel Bot your virtual assistant, Ican help you in answering questions, creating tasks in another system",
+mscq4,msci4,FALSE,What can you do for me,"Hi !!! I'm Marvel Bot your virtual assistant, Ican help you in answering questions, creating tasks in another system",
+mscq5,msci5,FALSE,Will you marry me,Sorry I'm not made for that anyway I can take it as a compliment,
+mscq6,msci6,FALSE,I love You,Sorry I'm not made for that anyway I can take it as a compliment,
+mscq7,msci7,FALSE,Where are you from,I'm from Hyderabad,
+mscq8,msci8,FALSE,Who made you,HAHA!!! Sorry it is too personal and you're not close enough to me to answer this,
+mscq9,msci9,FALSE,How are you,Glad !! I'm fine,

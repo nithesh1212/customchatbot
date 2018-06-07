@@ -1,0 +1,78 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/commons/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/static/chat/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="/static/chat/css/login.css">
+	
+    <script src="/static/commons/js/jquery.min.js"></script>
+    <script src="/static/commons/js/bootstrap.min.js"></script>
+    <script src="/static/stories/js/stories.js"></script>
+</head>
+<body onload="noBack();">
+
+        <div id="navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="index.html">
+                            <img src="/static/images/logo.png" class="img-responsive" alt="">
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <p>Welcome <strong>{{ username }}</strong></p>
+                            </li>
+                            <li><a href="/stories/logout"><i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+                            <li><a href="#team"><i class="fa fa-search" aria-hidden="true"></i></a></li>
+                            <li><a href="#aboutus"><i class="fa fa-bell" aria-hidden="true"></i></a></li>
+                            <li><a href="#portfolio"><i class="fa fa-cog" aria-hidden="true"></i></a></li>
+                            <li><a href="#contact"><i class="fa fa-headphones" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+<div class="container" style="margin-top:100px;min-height:600px">
+    <div class="container-story">
+		<div class="story-head">
+			<h1>Intents for the {{ botName }}</h1>
+            <p>This page shows the list of intents created for a Bot. User can also create new intents by clicking "Create Intent"</p>
+			<a type="button" class="btn btn-primary" href="/stories/create/{{ botId }}">Create Intent</a>
+		</div>
+			<div class="stories">
+			</div>
+
+
+
+			</div>
+	
+    </div>
+        
+</div>
+
+<div id="footer" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul>
+                        <li><a href="">Contacts</a></li> |
+                        <li><a href="">Feedback</a></li> |
+                        <li><a href="">Help</a></li> |
+                        <li><a href="">Site Map</a></li> |
+                        <li><a href="">Terms & Conditions</a></li> |
+                        <li><a href="">Privacy Statement</a></li> |
+                        <li><a href="">cookie Policy</a></li> |
+                        <li><a href="">Trademarks</a></li>
+                    </ul>
+                </div>
+            </div>
+	</div>
+    </div>
+
+</body>
+</html>

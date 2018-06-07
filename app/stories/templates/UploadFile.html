@@ -1,0 +1,59 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/commons/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/commons/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/stories/css/stories.css">
+    <script src="/static/commons/js/jquery.min.js"></script>
+    <script src="/static/commons/js/bootstrap.min.js"></script>
+    <script src="/static/stories/js/stories.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <div class="pull-left">
+            <h2>Upload FAQ's</h2>
+            <p>This page helps you in uploading a bunch of FAQ's in a CSV format. Please click here to download the FAQ Format. Currently we're supporting CSV file uploads.</p>
+
+        </div>
+        <div class="pull-right">
+            <a href="/"><img class="logo-left" src="/static/images/iky.png"></a>
+        </div>
+        <div class="clearfix"></div>
+		</div>
+
+                <input type="text" id="upbotId" value="{{ botId }}" hidden>
+                <div class="span4">
+                     <div class="span4">
+						<input type="file" name="fileupload" value="fileupload" id="file">
+					  </div>
+
+                          <div class="pull-right">
+                       <button type="button" class="btn btn-primary" id="uploadCSV">Upload</button>
+                         </div>
+
+                </div>
+
+
+    <div>
+
+
+
+
+    </div>
+
+    <div class="fileType">
+
+                    <br>
+                    <br>
+                    <br>
+                    <a href="/static/sample.csv" download> Click Here to download he sample </a><br><br><br><br>
+       <font color="red" size="5"> <span id="status"></span></font>
+
+
+
+
+                    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+storyName,intentName,apiTrigger,speechResponse,labelledSentences,parameters
+FAQ,faq_intent,FALSE,"Doc Exchange, is an external file sharing tool at Cisco, is available for securely sharing and exchanging files with our customers and partners. This tool is developed in partnership with Services, IT, and InfoSec to meet all Cisco Data Protection Standards and implements the features needed to securely and easily exchange highly confidential data with our customers and partners.
+ 
+In alignment with Cisco Doc Central (EDCS next generation), this tool makes it easier for internal Cisco users to share content with customers and partners along with allowing better control over shared content. Customer and partners in turn can also upload files using this system.",What is Doc Exchange,
+FAQ,faq_intent,FALSE,"Doc Central is the eventual replacement for both EDCS and Cisco Docs. It is a content management system that will contain all of the features you have today in both systems plus new features.
+Doc Exchange, is an external file sharing tool at Cisco, is available for securely sharing and exchanging files with our customers and partners. This is integrated with Doc Central and you can publish files from Doc Central to Doc Exchange for consumption by Cisco partners and customers.",What's the difference between Doc Central and Doc Exchange,
+FAQ,faq_intent,FALSE,"Cisco Docs External is the external sharing tool for Cisco Docs and Doc Exchange is the external sharing tool for Doc Central. Both tools allow you to share content externally, but their look and feel, user experience and certain features are different.",What's the difference between Cisco Docs External and Doc Exchange,
+FAQ,faq_intent,FALSE,"Doc Exchange officially supports the following browsers:
+Internet Explorer 10 and 11
+Google Chrome (latest version)
+Firefox (latest version)
+Other browsers may work fine but we only test these three so please do not open a support case if you have issues with other browsers or older versions.",What browsers does Doc Exchange officially support,
