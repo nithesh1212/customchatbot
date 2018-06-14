@@ -175,6 +175,16 @@ def sparkConfig(botId):
     else:
         return render_template('logout.html')
 
+
+@stories.route('/appendUrl', methods=['POST'])
+def appendUrl():
+    content = request.get_json(silent=True)
+    print(content.get('nodeId'))
+
+    downloadUrl = "http://alfcmx-app-dev-01:9090/alfresco/service/slingshot/node/content/"+content.get('nodeId')
+    return downloadUrl
+
+
 @stories.route('/sparkwebhook',methods=['POST'])
 def sparkwebhook():
     if (session.__getattribute__('loginstat') == 'login'):
@@ -189,7 +199,7 @@ def sparkwebhook():
         print("headers",headers)
         content1={
         "name": content.get('botEmail')+" webhook",
-        "targetUrl": "https://3d6bb6e2.ngrok.io/api/spark/"+content.get('botId'),
+        "targetUrl": "https://6fb42852.ngrok.io/api/spark/"+content.get('botId'),
         "resource": "messages",
         "event": "created"
     }

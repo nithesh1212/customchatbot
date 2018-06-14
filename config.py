@@ -3,7 +3,7 @@ import os
 
 class Config(object):
     DEBUG = False
-    DB_NAME = "ChatBot"
+    DB_NAME = "iky-ai"
     DB_HOST = "localhost"
     DB_USERNAME = ""
     DB_PASSWORD = ""

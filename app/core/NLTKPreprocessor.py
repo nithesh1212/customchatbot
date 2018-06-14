@@ -14,7 +14,7 @@ class NLTKPreprocessor(BaseEstimator, TransformerMixin):
 
     def __init__(self, stopwords=None, punct=None,
                  lower=True, strip=True):
-        print("Inside NLTk cosnt")
+       # print("Inside NLTk cosnt")
         self.lower = lower
         self.strip = strip
         self.stopwords  = stopwords or set(sw.words('english'))
@@ -22,22 +22,22 @@ class NLTKPreprocessor(BaseEstimator, TransformerMixin):
         self.lemmatizer = WordNetLemmatizer()
 
     def fit(self, X, y=None):
-        print("In fit")
+        #print("In fit")
         return self
 
     def inverse_transform(self, X):
-        print("In inverse")
+        #print("In inverse")
         return [" ".join(doc) for doc in X]
 
     def transform(self, X):
-        print("In transorm")
+        #print("In transorm")
         return [
             list(self.tokenize(doc)) for doc in X
         ]
 
     def tokenize(self, document):
         # Break the document into sentences
-        print("In tokenize")
+        #print("In tokenize")
         for sent in sent_tokenize(document):
             print("sent",sent)
             # Break the sentence into part of speech tagged tokens
@@ -64,7 +64,7 @@ class NLTKPreprocessor(BaseEstimator, TransformerMixin):
                 print("In token tag")
 
     def lemmatize(self, token, tag):
-        print("In leammarize")
+        #print("In leammarize")
         tag = {
             'N': wn.NOUN,
             'V': wn.VERB,
